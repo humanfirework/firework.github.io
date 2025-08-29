@@ -12,6 +12,8 @@
     "version": "7.3.0"
   },
   "dependencies": {
+    "gulp": "^5.0.1",
+    "gulp-cli": "^3.1.0",
     "hexo": "^7.3.0",
     "hexo-cli": "^4.3.2",
     "hexo-deployer-git": "^4.0.0",
