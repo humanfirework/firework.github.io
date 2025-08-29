@@ -1,0 +1,15 @@
+- class_name: 技术博客
+  class_desc: 技术交流与学习
+  link_list:
+    - name: 微雨扬
+      link: https://xyyblog.online
+      avatar: /firework.github.io/img/xxy.jpg
+      descr: 分享技术与生活的点滴
+
+- class_name: 生活随笔
+  class_desc: 生活感悟与分享
+  link_list:
+    - name: 胡桃
+      link: https://humanfirework.github.io/Website.github.io
+      avatar: /firework.github.io/img/favicon.png
+      descr: 这是一个生活博客示例
