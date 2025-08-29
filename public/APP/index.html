@@ -1,0 +1,386 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>宝藏APP合集 - 白嫖怪必备神器 | 在这个世界上总要留下些什么</title><meta name="author" content="墓葬未亡人"><meta name="copyright" content="墓葬未亡人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="专门为白嫖怪开发的高效实用APP合集，全部免费下载，真实可靠，放心使用！">
+<meta property="og:type" content="website">
+<meta property="og:title" content="宝藏APP合集 - 白嫖怪必备神器">
+<meta property="og:url" content="https://humanfirework.github.io/APP/index.html">
+<meta property="og:site_name" content="在这个世界上总要留下些什么">
+<meta property="og:description" content="专门为白嫖怪开发的高效实用APP合集，全部免费下载，真实可靠，放心使用！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://humanfirework.github.io/img/favicon.ico">
+<meta property="article:published_time" content="2025-08-28T10:21:48.000Z">
+<meta property="article:modified_time" content="2024-12-19T12:30:00.000Z">
+<meta property="article:author" content="墓葬未亡人">
+<meta property="article:tag" content="博客,技术,生活,分享">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://humanfirework.github.io/img/favicon.ico"><script type="application/ld+json"></script><link rel="shortcut icon" href="/firework.github.io/%5Bobject%20Object%5D"><link rel="canonical" href="https://humanfirework.github.io/APP/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/firework.github.io/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/firework.github.io/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '宝藏APP合集 - 白嫖怪必备神器',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/firework.github.io/img/apple-touch-icon.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/firework.github.io/img/favicon.ico" onerror="this.onerror=null;this.src='/firework.github.io/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/firework.github.io/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/firework.github.io/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/firework.github.io/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/firework.github.io/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/APP/"><i class="fa-fw fa fa-apple"></i><span> APP</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div><div class="menus_item"><span class="site-page group"><span> 语言</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/firework.github.io/"><i class="fa-fw fa fa-language"></i><span> 中文</span></a></li><li><a class="site-page child" href="/firework.github.io/en/"><i class="fa-fw fa fa-language"></i><span> 英文</span></a></li><li><a class="site-page child" href="/firework.github.io/ja/"><i class="fa-fw fa fa-language"></i><span> 日文</span></a></li></ul></div></div></div></div><div class="page type-APP" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url(/firework.github.io/img/apple-touch-icon.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/firework.github.io/"><span class="site-name">在这个世界上总要留下些什么</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/firework.github.io/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/APP/"><i class="fa-fw fa fa-apple"></i><span> APP</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/firework.github.io/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div><div class="menus_item"><span class="site-page group"><span> 语言</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/firework.github.io/"><i class="fa-fw fa fa-language"></i><span> 中文</span></a></li><li><a class="site-page child" href="/firework.github.io/en/"><i class="fa-fw fa fa-language"></i><span> 英文</span></a></li><li><a class="site-page child" href="/firework.github.io/ja/"><i class="fa-fw fa fa-language"></i><span> 日文</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">宝藏APP合集 - 白嫖怪必备神器</h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><h1 id="💎-宝藏APP合集-白嫖怪必备神器"><a href="#💎-宝藏APP合集-白嫖怪必备神器" class="headerlink" title="💎 宝藏APP合集 - 白嫖怪必备神器"></a>💎 宝藏APP合集 - 白嫖怪必备神器</h1><blockquote>
+<p><strong>专门为白嫖怪开发的宝藏资源收集网站，所有APP都能免费下载，保证资源真实可靠，大家可放心使用！</strong></p>
+</blockquote>
+<h2 id="📱-效率工具类"><a href="#📱-效率工具类" class="headerlink" title="📱 效率工具类"></a>📱 效率工具类</h2><h3 id="🚀-全能扫描王-CamScanner"><a href="#🚀-全能扫描王-CamScanner" class="headerlink" title="🚀 全能扫描王 - CamScanner"></a>🚀 全能扫描王 - CamScanner</h3><ul>
+<li><strong>特点</strong>: 免费OCR文字识别、PDF生成、证件扫描</li>
+<li><strong>白嫖技巧</strong>: 使用网页版完全免费，无需VIP</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://www.camscanner.com/">官网直达</a></li>
+</ul>
+<h3 id="📝-印象笔记-Evernote"><a href="#📝-印象笔记-Evernote" class="headerlink" title="📝 印象笔记 - Evernote"></a>📝 印象笔记 - Evernote</h3><ul>
+<li><strong>特点</strong>: 跨平台同步、语音转文字、网页剪藏</li>
+<li><strong>白嫖技巧</strong>: 基础版完全够用，多端同步无压力</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://evernote.com/">官方下载</a></li>
+</ul>
+<h2 id="🎨-设计创作类"><a href="#🎨-设计创作类" class="headerlink" title="🎨 设计创作类"></a>🎨 设计创作类</h2><h3 id="🎬-剪映国际版-CapCut"><a href="#🎬-剪映国际版-CapCut" class="headerlink" title="🎬 剪映国际版 - CapCut"></a>🎬 剪映国际版 - CapCut</h3><ul>
+<li><strong>特点</strong>: 免费专业视频剪辑、无水印导出</li>
+<li><strong>白嫖技巧</strong>: 国际版无广告，功能全开放</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://www.capcut.com/">国际版APK</a></li>
+</ul>
+<h3 id="🎨-美图秀秀国际版"><a href="#🎨-美图秀秀国际版" class="headerlink" title="🎨 美图秀秀国际版"></a>🎨 美图秀秀国际版</h3><ul>
+<li><strong>特点</strong>: 免费AI绘画、一键抠图、证件照制作</li>
+<li><strong>白嫖技巧</strong>: 国际版解锁所有VIP功能</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://meitu.com/">国际版官网</a></li>
+</ul>
+<h2 id="🔍-资源搜索类"><a href="#🔍-资源搜索类" class="headerlink" title="🔍 资源搜索类"></a>🔍 资源搜索类</h2><h3 id="📚-鸠摩搜索-电子书神器"><a href="#📚-鸠摩搜索-电子书神器" class="headerlink" title="📚 鸠摩搜索 - 电子书神器"></a>📚 鸠摩搜索 - 电子书神器</h3><ul>
+<li><strong>特点</strong>: 全网电子书资源聚合搜索</li>
+<li><strong>白嫖技巧</strong>: 直接搜索书名+PDF，90%都能找到</li>
+<li><strong>使用地址</strong>: <a target="_blank" rel="noopener" href="https://www.jiumodiary.com/">鸠摩搜索</a></li>
+</ul>
+<h3 id="🎵-洛雪音乐助手"><a href="#🎵-洛雪音乐助手" class="headerlink" title="🎵 洛雪音乐助手"></a>🎵 洛雪音乐助手</h3><ul>
+<li><strong>特点</strong>: 全网音乐免费听、无损下载</li>
+<li><strong>白嫖技巧</strong>: 开源项目，完全免费无广告</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://github.com/lyswhut/lx-music-desktop">GitHub开源</a></li>
+</ul>
+<h2 id="🌐-浏览器插件类"><a href="#🌐-浏览器插件类" class="headerlink" title="🌐 浏览器插件类"></a>🌐 浏览器插件类</h2><h3 id="📖-沙拉查词-划词翻译"><a href="#📖-沙拉查词-划词翻译" class="headerlink" title="📖 沙拉查词 - 划词翻译"></a>📖 沙拉查词 - 划词翻译</h3><ul>
+<li><strong>特点</strong>: 聚合翻译、生词本、发音朗读</li>
+<li><strong>白嫖技巧</strong>: Chrome商店免费安装，支持所有浏览器</li>
+<li><strong>安装地址</strong>: <a target="_blank" rel="noopener" href="https://chrome.google.com/webstore">Chrome商店</a></li>
+</ul>
+<h3 id="🚀-Tampermonkey-油猴脚本"><a href="#🚀-Tampermonkey-油猴脚本" class="headerlink" title="🚀 Tampermonkey - 油猴脚本"></a>🚀 Tampermonkey - 油猴脚本</h3><ul>
+<li><strong>特点</strong>: 破解网站VIP、去广告、功能增强</li>
+<li><strong>白嫖技巧</strong>: 配合脚本网站使用，全网资源免费看</li>
+<li><strong>安装地址</strong>: <a target="_blank" rel="noopener" href="https://www.tampermonkey.net/">官网下载</a></li>
+</ul>
+<h2 id="⚡-系统优化类"><a href="#⚡-系统优化类" class="headerlink" title="⚡ 系统优化类"></a>⚡ 系统优化类</h2><h3 id="🧹-清浊-手机清理神器"><a href="#🧹-清浊-手机清理神器" class="headerlink" title="🧹 清浊 - 手机清理神器"></a>🧹 清浊 - 手机清理神器</h3><ul>
+<li><strong>特点</strong>: 深度清理、微信专清、大文件扫描</li>
+<li><strong>白嫖技巧</strong>: 酷安下载免费版，功能全开放</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://www.coolapk.com/">酷安应用市场</a></li>
+</ul>
+<h3 id="📱-Shizuku-系统级权限管理"><a href="#📱-Shizuku-系统级权限管理" class="headerlink" title="📱 Shizuku - 系统级权限管理"></a>📱 Shizuku - 系统级权限管理</h3><ul>
+<li><strong>特点</strong>: 免root实现系统级操作、ADB调试</li>
+<li><strong>白嫖技巧</strong>: 开源项目，GitHub免费下载</li>
+<li><strong>下载地址</strong>: <a target="_blank" rel="noopener" href="https://github.com/RikkaApps/Shizuku">GitHub开源</a></li>
+</ul>
+<h2 id="🎯-下载方式"><a href="#🎯-下载方式" class="headerlink" title="🎯 下载方式"></a>🎯 下载方式</h2><h3 id="📥-官方渠道优先"><a href="#📥-官方渠道优先" class="headerlink" title="📥 官方渠道优先"></a>📥 官方渠道优先</h3><ul>
+<li>所有推荐APP均提供<strong>官方免费下载</strong></li>
+<li><strong>拒绝破解版</strong>，保证安全可靠</li>
+<li><strong>持续更新</strong>，追更最新版本</li>
+</ul>
+<h3 id="🔍-搜索技巧"><a href="#🔍-搜索技巧" class="headerlink" title="🔍 搜索技巧"></a>🔍 搜索技巧</h3><ul>
+<li>搜索时加上”国际版”或”开源版”</li>
+<li>使用GitHub搜索开源替代品</li>
+<li>关注酷安、GitHub等正规平台</li>
+</ul>
+<h2 id="⚠️-使用提醒"><a href="#⚠️-使用提醒" class="headerlink" title="⚠️ 使用提醒"></a>⚠️ 使用提醒</h2><blockquote>
+<p><strong>所有资源均为免费分享，请勿用于商业用途</strong><br><strong>建议从官方渠道下载，确保安全可靠</strong><br><strong>如遇到收费情况，请立即卸载并反馈</strong></p>
+</blockquote>
+<hr>
+<h2 id="🔄-更新日志"><a href="#🔄-更新日志" class="headerlink" title="🔄 更新日志"></a>🔄 更新日志</h2><ul>
+<li><strong>2024.12.19</strong> 新增剪映国际版、洛雪音乐助手</li>
+<li><strong>2024.12.15</strong> 优化搜索关键词和下载地址</li>
+<li><strong>2024.12.10</strong> 初版发布，收录20+宝藏APP</li>
+</ul>
+<hr>
+<blockquote>
+<p>💡 <strong>收藏本页面</strong>，持续更新更多白嫖神器！</p>
+</blockquote>
+</div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/firework.github.io/img/favicon.ico" onerror="this.onerror=null;this.src='/firework.github.io/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">墓葬未亡人</div><div class="author-info-description">一个记录技术与生活的个人博客</div><div class="site-data"><a href="/firework.github.io/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/firework.github.io/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/firework.github.io/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/humanfirework"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/humanfirework" target="_blank" title="fab fa-github"><i class="GitHub" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/3494381157878384" target="_blank" title="fab fa-bilibili"><i class="哔哩哔哩" style="color: #00a1d6;"></i></a><a class="social-icon" href="/firework.github.io/2223481830@qq.com" target="_blank" title="fa fa-envelope"><i class="邮箱" style="color: #ea4335;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/firework.github.io/2025/08/27/hello-world/" title="你好，我是未亡人">你好，我是未亡人</a><time datetime="2025-08-27T12:30:00.000Z" title="发表于 2025-08-27 20:30:00">2025-08-27</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/firework.github.io/categories/%E5%85%B3%E4%BA%8E%E6%88%91/"><span class="card-category-list-name">关于我</span><span class="card-category-list-count">1</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/firework.github.io/tags/%E5%85%B3%E4%BA%8E%E6%88%91/" style="font-size: 1.1em; color: #999">关于我</a> <a href="/firework.github.io/tags/B%E7%AB%99/" style="font-size: 1.1em; color: #999">B站</a> <a href="/firework.github.io/tags/%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D/" style="font-size: 1.1em; color: #999">自我介绍</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/firework.github.io/archives/2025/08/">
+            <span class="card-archive-list-date">
+              八月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">1</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-08-29T09:11:35.377Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/firework.github.io/img/apple-touch-icon.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 墓葬未亡人</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button id="chat-btn" type="button" title="聊天" style="display:none"><i class="fas fa-message"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/firework.github.io/js/utils.js"></script><script src="/firework.github.io/js/main.js"></script><script src="/firework.github.io/js/tw_cn.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+
+  const disqusReset = conf => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: conf
+    })
+  }
+
+  const loadDisqus = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyDisqus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    window.disqus_identifier = isShuoshuo ? path : '/firework.github.io/APP/index.html'
+    window.disqus_url = isShuoshuo ? location.origin + path : 'https://humanfirework.github.io/APP/index.html'
+
+    const disqus_config = function () {
+      this.page.url = disqus_url
+      this.page.identifier = disqus_identifier
+      this.page.title = '宝藏APP合集 - 白嫖怪必备神器'
+    }
+
+    if (window.DISQUS) disqusReset(disqus_config)
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+
+    btf.addGlobalFn('themeChange', () => disqusReset(disqus_config), 'disqus')
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Disqus' === 'Disqus'
+      ? window.shuoshuoComment = { loadComment: loadDisqus }
+      : window.loadOtherComment = loadDisqus
+    return
+  }
+
+  if ('Disqus' === 'Disqus' || !true) {
+    if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script src="/js/loading-config.js"></script><script src="/js/custom.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script>(() => {
+  window.ChatraID = ''
+  window.Chatra = window.Chatra || function() {
+    (window.Chatra.q = window.Chatra.q || []).push(arguments)
+  }
+
+  btf.getScript('https://call.chatra.io/chatra.js').then(() => {
+    const isChatBtn = true
+    const isChatHideShow = false
+
+    if (isChatBtn) {
+      const close = () => {
+        Chatra('minimizeWidget')
+        Chatra('hide')
+      }
+
+      const open = () => {
+        Chatra('openChat', true)
+        Chatra('show')
+      }
+
+      window.ChatraSetup = { startHidden: true }
+    
+      window.chatBtnFn = () => document.getElementById('chatra').classList.contains('chatra--expanded') ? close() : open()
+
+      document.getElementById('chat-btn').style.display = 'block'
+    } else if (isChatHideShow) {
+      window.chatBtn = {
+        hide: () => Chatra('hide'),
+        show: () => Chatra('show')
+      }
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
