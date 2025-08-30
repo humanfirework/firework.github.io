@@ -19,7 +19,7 @@ const LOADING_IMAGES = {
     text: '正在加载中',
     
     // 动画持续时间（毫秒）
-    duration: 1500
+    duration: 500
 };
 
 // 使用方法：
@@ -30,3 +30,35 @@ const LOADING_IMAGES = {
 // 示例：
 // 如果你想用自己的logo.png，只需：
 // primary: '/img/logo.png'
+
+// 加载动画控制逻辑
+(function() {
+    'use strict';
+
+    // 等待页面完全加载后隐藏加载动画
+    function hideLoadingAnimation() {
+        const preloader = document.querySelector('.preloader-custom');
+        if (preloader) {
+            setTimeout(() => {
+                preloader.classList.add('hide');
+                
+                // 触发开门动画
+                if (typeof triggerDoorAnimation === 'function') {
+                    setTimeout(() => {
+                        triggerDoorAnimation();
+                    }, 300);
+                }
+            }, LOADING_IMAGES.duration);
+        }
+    }
+
+    // 当页面加载完成后执行
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoadingAnimation);
+    } else {
+        hideLoadingAnimation();
+    }
+
+    // 如果页面已经加载完成，直接执行
+    window.addEventListener('load', hideLoadingAnimation);
+})();
