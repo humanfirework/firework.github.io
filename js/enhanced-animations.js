@@ -20,12 +20,13 @@
             this.initHoverEffects();
         },
 
-        // 1. 滚动视差动画
+        // 1. 滚动视差动画 - 优化版
         initScrollAnimations() {
             const parallaxElements = document.querySelectorAll('.parallax-bg');
             
             if (parallaxElements.length === 0) return;
 
+            let ticking = false;
             const updateParallax = () => {
                 const scrolled = window.pageYOffset;
                 const rate = scrolled * -0.5;
@@ -33,18 +34,28 @@
                 parallaxElements.forEach(element => {
                     element.style.transform = `translateY(${rate}px) translateZ(0)`;
                 });
+                
+                ticking = false;
             };
 
-            window.addEventListener('scroll', updateParallax, { passive: true });
+            const requestTick = () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            };
+
+            window.addEventListener('scroll', requestTick, { passive: true });
         },
 
-        // 2. 导航栏滚动效果 - 修复向上滑动显示逻辑
+        // 2. 导航栏滚动效果 - 优化版
         initNavbarScroll() {
             const navbar = document.querySelector('#nav, .navbar-scroll');
             if (!navbar) return;
 
             let lastScrollTop = 0;
             let isScrollingDown = false;
+            let ticking = false;
             
             const updateNavbar = () => {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -60,17 +71,27 @@
                     // 向下滚动 - 隐藏导航栏
                     isScrollingDown = true;
                     navbar.style.transform = 'translateY(-100%)';
+                    navbar.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
                 } else if (scrollTop < lastScrollTop) {
                     // 向上滚动 - 显示导航栏
                     isScrollingDown = false;
                     navbar.style.transform = 'translateY(0)';
+                    navbar.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
                 }
                 
                 lastScrollTop = scrollTop;
+                ticking = false;
+            };
+
+            const requestTick = () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateNavbar);
+                    ticking = true;
+                }
             };
 
             // 使用防抖优化滚动性能
-            const debouncedUpdate = debounce(updateNavbar, 10);
+            const debouncedUpdate = debounce(requestTick, 16);
             window.addEventListener('scroll', debouncedUpdate, { passive: true });
         },
 
@@ -133,20 +154,31 @@
             setInterval(createParticle, 800);
         },
 
-        // 5. 滚动进度条
+        // 5. 滚动进度条 - 优化版
         initScrollProgress() {
             const progressBar = document.querySelector('.scroll-progress');
             if (!progressBar) return;
 
+            let ticking = false;
             const updateProgress = () => {
                 const scrollTop = window.pageYOffset;
                 const docHeight = document.body.scrollHeight - window.innerHeight;
                 const scrollPercent = (scrollTop / docHeight) * 100;
                 
                 progressBar.style.width = Math.min(scrollPercent, 100) + '%';
+                progressBar.style.transition = 'width 0.1s cubic-bezier(0.16, 1, 0.3, 1)';
+                
+                ticking = false;
             };
 
-            window.addEventListener('scroll', updateProgress, { passive: true });
+            const requestTick = () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateProgress);
+                    ticking = true;
+                }
+            };
+
+            window.addEventListener('scroll', requestTick, { passive: true });
             updateProgress(); // 初始化
         },
 

@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# 禁止访问后台管理页面
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /*.json$
+Disallow: /*.md$
+Disallow: /tags/*
+Disallow: /categories/*
+
+# 允许搜索引擎访问重要页面
+Allow: /archives/
+Allow: /about/
+Allow: /link/
+Allow: /tags/
+Allow: /categories/
+
+# 网站地图
+Sitemap: http://120.26.144.211/sitemap.xml
+Sitemap: http://120.26.144.211/baidusitemap.xml
