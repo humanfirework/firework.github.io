@@ -180,6 +180,51 @@
   animation-delay: 0.3s;
 }
 
+/* 作者卡片按钮样式 */
+.author-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#card-info-btn,
+#card-info-bilibili-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: #49b1f5;
+  color: #fff;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin: 5px 0;
+}
+
+#card-info-btn:hover,
+#card-info-bilibili-btn:hover {
+  background: #3584e4;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(73, 177, 245, 0.4);
+}
+
+#card-info-btn i,
+#card-info-bilibili-btn i {
+  margin-right: 5px;
+}
+
+/* B站按钮改为黑色 */
+#card-info-bilibili-btn {
+  background: #333;
+}
+
+#card-info-bilibili-btn:hover {
+  background: #555;
+  box-shadow: 0 5px 15px rgba(51, 51, 51, 0.4);
+}
+
 @keyframes fadeInUp {
   0% {
     opacity: 0;
