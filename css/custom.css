@@ -191,9 +191,9 @@
 #card-info-btn,
 #card-info-bilibili-btn {
   display: inline-flex;
-  align-items: center;
+  align-items: center; /* 垂直居中对齐 */
   justify-content: center;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 6px;
   background: #49b1f5;
   color: #fff;
@@ -201,6 +201,11 @@
   text-decoration: none;
   transition: all 0.3s ease;
   margin: 5px 0;
+  min-width: 100px;
+  height: 36px;
+  box-sizing: border-box;
+  line-height: 1; /* 重置行高 */
+  vertical-align: middle;
 }
 
 #card-info-btn:hover,
@@ -210,9 +215,47 @@
   box-shadow: 0 5px 15px rgba(73, 177, 245, 0.4);
 }
 
+#card-info-btn span,
+#card-info-bilibili-btn span {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  top: 0.5px; /* 微调文本垂直位置实现完美对齐 */
+}
+
 #card-info-btn i,
 #card-info-bilibili-btn i {
-  margin-right: 5px;
+  margin-right: 6px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex-shrink: 0;
+  position: relative;
+  top: -0.5px; /* 微调图标垂直位置实现完美对齐 */
+}
+
+/* 作者卡片按钮容器对齐 */
+.author-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.author-buttons #card-info-btn,
+.author-buttons #card-info-bilibili-btn {
+  width: 100%;
+  max-width: 200px;
 }
 
 /* B站按钮改为黑色 */
@@ -295,6 +338,33 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #ff7b7b;
+}
+
+/* ICP备案号样式 */
+.icp-info {
+  text-align: left;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.icp-info a {
+  color: var(--light-grey);
+  text-decoration: none;
+  font-size: 0.9em;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.icp-info a:hover {
+  opacity: 1;
+  color: #ff5252;
+}
+
+@media screen and (max-width: 768px) {
+  .icp-info {
+    margin-left: 10px;
+    text-align: center;
+  }
 }
 
 /* 页面加载动画 */
