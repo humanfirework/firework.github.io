@@ -1,0 +1,373 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器 | 在这个世界上总要留下些什么</title><meta name="author" content="墓葬未亡人"><meta name="copyright" content="墓葬未亡人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器（含所有错误排查、保存退出、钩子脚本细节）  0 前提 阿里云 ECS 或轻量服务器（系统以 Ubuntu 为例，CentOS 同理） 本地电脑已安装 Hexo、Git、Node.js 服务器已开放 22、80、443 端口（安全组+系统防火墙）   1 服务器端操作（全程 root 身份）1.1 安装基础环境12345# 更新软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器">
+<meta property="og:url" content="https://www.wxblog.online/2025/08/28/hexo-deploy-to-aliyun-server/index.html">
+<meta property="og:site_name" content="在这个世界上总要留下些什么">
+<meta property="og:description" content="超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器（含所有错误排查、保存退出、钩子脚本细节）  0 前提 阿里云 ECS 或轻量服务器（系统以 Ubuntu 为例，CentOS 同理） 本地电脑已安装 Hexo、Git、Node.js 服务器已开放 22、80、443 端口（安全组+系统防火墙）   1 服务器端操作（全程 root 身份）1.1 安装基础环境12345# 更新软件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wxblog.online/img/favicon.ico">
+<meta property="article:published_time" content="2025-08-28T06:30:00.000Z">
+<meta property="article:modified_time" content="2025-10-25T12:26:12.681Z">
+<meta property="article:author" content="墓葬未亡人">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="阿里云">
+<meta property="article:tag" content="服务器部署">
+<meta property="article:tag" content="静态博客">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wxblog.online/img/favicon.ico"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器",
+  "url": "https://www.wxblog.online/2025/08/28/hexo-deploy-to-aliyun-server/",
+  "image": "https://www.wxblog.online/img/favicon.ico",
+  "datePublished": "2025-08-28T06:30:00.000Z",
+  "dateModified": "2025-10-25T12:26:12.681Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "墓葬未亡人",
+      "url": "https://www.wxblog.online"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/%5Bobject%20Object%5D"><link rel="canonical" href="https://www.wxblog.online/2025/08/28/hexo-deploy-to-aliyun-server/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/enhanced-animations.css"><link rel="stylesheet" href="/css/custom.css"><div class="scroll-indicator"><div class="scroll-progress"></div></div><div class="particles-container"></div><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/apple-touch-icon.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.ico" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/APP/"><i class="fa-fw fa fa-apple"></i><span> APP</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div><div class="menus_item"><span class="site-page group"><span> 语言</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/"><i class="fa-fw fa fa-language"></i><span> 中文</span></a></li><li><a class="site-page child" href="/en/"><i class="fa-fw fa fa-language"></i><span> 英文</span></a></li><li><a class="site-page child" href="/ja/"><i class="fa-fw fa fa-language"></i><span> 日文</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/apple-touch-icon.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">在这个世界上总要留下些什么</span></a><a class="nav-page-title" href="/"><span class="site-name">超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/APP/"><i class="fa-fw fa fa-apple"></i><span> APP</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div><div class="menus_item"><span class="site-page group"><span> 语言</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/"><i class="fa-fw fa fa-language"></i><span> 中文</span></a></li><li><a class="site-page child" href="/en/"><i class="fa-fw fa fa-language"></i><span> 英文</span></a></li><li><a class="site-page child" href="/ja/"><i class="fa-fw fa fa-language"></i><span> 日文</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-28T06:30:00.000Z" title="发表于 2025-08-28 14:30:00">2025-08-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-25T12:26:12.681Z" title="更新于 2025-10-25 20:26:12">2025-10-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/">技术教程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2025/08/28/hexo-deploy-to-aliyun-server/#post-comment"><span class="waline-comment-count" data-path="/2025/08/28/hexo-deploy-to-aliyun-server/"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="超详细版：从-0-到-1-把-Hexo-静态博客部署到阿里云服务器"><a href="#超详细版：从-0-到-1-把-Hexo-静态博客部署到阿里云服务器" class="headerlink" title="超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器"></a>超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器</h1><p>（含所有错误排查、保存退出、钩子脚本细节）</p>
+<hr>
+<h2 id="0-前提"><a href="#0-前提" class="headerlink" title="0 前提"></a>0 前提</h2><ul>
+<li>阿里云 <strong>ECS 或轻量服务器</strong>（系统以 Ubuntu 为例，CentOS 同理）</li>
+<li>本地电脑已安装 <strong>Hexo、Git、Node.js</strong></li>
+<li>服务器已开放 <strong>22、80、443</strong> 端口（安全组+系统防火墙）</li>
+</ul>
+<hr>
+<h2 id="1-服务器端操作（全程-root-身份）"><a href="#1-服务器端操作（全程-root-身份）" class="headerlink" title="1 服务器端操作（全程 root 身份）"></a>1 服务器端操作（全程 root 身份）</h2><h3 id="1-1-安装基础环境"><a href="#1-1-安装基础环境" class="headerlink" title="1.1 安装基础环境"></a>1.1 安装基础环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新软件源</span></span><br><span class="line"><span class="built_in">sudo</span> apt update &amp;&amp; <span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Git + Nginx + Node/npm</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y git nginx nodejs npm</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-创建裸仓库（只存-Git-历史）"><a href="#1-2-创建裸仓库（只存-Git-历史）" class="headerlink" title="1.2 创建裸仓库（只存 Git 历史）"></a>1.2 创建裸仓库（只存 Git 历史）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建目录</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /var/repo/blog.git</span><br><span class="line"><span class="built_in">cd</span> /var/repo/blog.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化裸仓库（--bare = 无工作区）</span></span><br><span class="line"><span class="built_in">sudo</span> git init --bare</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-创建网站目录"><a href="#1-3-创建网站目录" class="headerlink" title="1.3 创建网站目录"></a>1.3 创建网站目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /var/www/hexo</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-创建-Git-Hook（自动部署脚本）"><a href="#1-4-创建-Git-Hook（自动部署脚本）" class="headerlink" title="1.4 创建 Git Hook（自动部署脚本）"></a>1.4 创建 Git Hook（自动部署脚本）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 vim 打开钩子文件（如用 nano，见下方保存退出）</span></span><br><span class="line"><span class="built_in">sudo</span> vim /var/repo/blog.git/hooks/post-receive</span><br></pre></td></tr></table></figure>
+
+<p>在 vim 里，按 <code>i</code> 进入插入模式，<strong>完整粘贴</strong>以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 变量——如需修改，只改这里</span></span><br><span class="line">GIT_REPO=/var/repo/blog.git</span><br><span class="line">TMP_CLONE=/tmp/hexo-$(<span class="built_in">date</span> +%s)</span><br><span class="line">PUBLIC_WWW=/var/www/hexo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 克隆最新代码</span></span><br><span class="line">git <span class="built_in">clone</span> <span class="variable">$GIT_REPO</span> <span class="variable">$TMP_CLONE</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 清空旧文件并复制新文件</span></span><br><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$PUBLIC_WWW</span>/*</span><br><span class="line"><span class="built_in">cp</span> -rf <span class="variable">$TMP_CLONE</span>/* <span class="variable">$PUBLIC_WWW</span>/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理临时目录</span></span><br><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$TMP_CLONE</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>保存并退出 vim</strong>  </p>
+<ol>
+<li>按 <code>Esc</code> 回到命令模式  </li>
+<li>输入 <code>:wq!</code> 回车（<code>w</code>&#x3D;写入，<code>q</code>&#x3D;退出，<code>!</code>&#x3D;强制）</li>
+</ol>
+<p>给脚本可执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> +x /var/repo/blog.git/hooks/post-receive</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-配置-Nginx-指向网站根目录"><a href="#2-配置-Nginx-指向网站根目录" class="headerlink" title="2 配置 Nginx 指向网站根目录"></a>2 配置 Nginx 指向网站根目录</h2><h3 id="2-1-备份默认配置"><a href="#2-1-备份默认配置" class="headerlink" title="2.1 备份默认配置"></a>2.1 备份默认配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-修改-Nginx-配置"><a href="#2-2-修改-Nginx-配置" class="headerlink" title="2.2 修改 Nginx 配置"></a>2.2 修改 Nginx 配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/nginx/sites-available/default</span><br></pre></td></tr></table></figure>
+<p>找到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root /var/www/html;</span><br></pre></td></tr></table></figure>
+<p>改成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root /var/www/hexo;</span><br></pre></td></tr></table></figure>
+<p>整段最小可用配置如下（可替换整段）：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span> [::]:<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> <span class="number">120.26.144.211</span>;   <span class="comment"># 以后换成域名</span></span><br><span class="line">    <span class="attribute">root</span> /var/www/hexo;</span><br><span class="line">    <span class="attribute">index</span> index.html index.htm;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ =<span class="number">404</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>保存退出 vim</strong>：<code>Esc</code> → <code>:wq!</code> → 回车</p>
+<h3 id="2-3-测试并重载"><a href="#2-3-测试并重载" class="headerlink" title="2.3 测试并重载"></a>2.3 测试并重载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nginx -t           <span class="comment"># 语法检查</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-本地-Hexo-配置一键推送"><a href="#3-本地-Hexo-配置一键推送" class="headerlink" title="3 本地 Hexo 配置一键推送"></a>3 本地 Hexo 配置一键推送</h2><h3 id="3-1-安装-hexo-deployer-git"><a href="#3-1-安装-hexo-deployer-git" class="headerlink" title="3.1 安装 hexo-deployer-git"></a>3.1 安装 hexo-deployer-git</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-config-yml-尾部追加"><a href="#3-2-config-yml-尾部追加" class="headerlink" title="3.2 _config.yml 尾部追加"></a>3.2 _config.yml 尾部追加</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">root@120.26.144.211:/var/repo/blog.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span>        <span class="comment"># 与裸仓库分支保持一致</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-首次推送并测试"><a href="#3-3-首次推送并测试" class="headerlink" title="3.3 首次推送并测试"></a>3.3 首次推送并测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g -d</span><br></pre></td></tr></table></figure>
+<p>看到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO  Deploy done: git</span><br></pre></td></tr></table></figure>
+<p>即成功。</p>
+<hr>
+<h2 id="4-常见错误一览-解决"><a href="#4-常见错误一览-解决" class="headerlink" title="4 常见错误一览 &amp; 解决"></a>4 常见错误一览 &amp; 解决</h2><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>解决命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Permission denied</code></td>
+<td>目录&#x2F;文件权限不足</td>
+<td><code>sudo chown -R www-data:www-data /var/www/hexo</code><br><code>sudo chmod -R 755 /var/www/hexo</code></td>
+</tr>
+<tr>
+<td><code>nginx: [emerg] bind() to 0.0.0.0:80 failed</code></td>
+<td>80 端口被占用</td>
+<td><code>sudo lsof -i:80</code><br><code>sudo systemctl stop apache2</code> 或其他进程</td>
+</tr>
+<tr>
+<td>上传后目录为空</td>
+<td>钩子默认分支是 master，推送的是 main</td>
+<td>在裸仓库执行：<code>git symbolic-ref HEAD refs/heads/main</code></td>
+</tr>
+<tr>
+<td>样式错乱&#x2F;空白</td>
+<td>图片&#x2F;Css 404、路径错误</td>
+<td>把 <code>_config.yml</code> 的 <code>url</code> 改为 <code>http://120.26.144.211</code> 再重新部署</td>
+</tr>
+<tr>
+<td>vim 提示 <code>E45: readonly</code></td>
+<td>没权限</td>
+<td>用 <code>sudo vim</code> 或 <code>:wq!</code> 强制保存</td>
+</tr>
+<tr>
+<td>每次输入密码</td>
+<td>未配置 SSH 密钥</td>
+<td><code>ssh-copy-id root@120.26.144.211</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5-一键速查表"><a href="#5-一键速查表" class="headerlink" title="5 一键速查表"></a>5 一键速查表</h2><table>
+<thead>
+<tr>
+<th>任务</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地预览</td>
+<td><code>hexo s -o</code></td>
+</tr>
+<tr>
+<td>正式发布</td>
+<td><code>hexo clean &amp;&amp; hexo g -d</code></td>
+</tr>
+<tr>
+<td>重启 nginx</td>
+<td><code>sudo systemctl restart nginx</code></td>
+</tr>
+<tr>
+<td>查看 nginx 错误日志</td>
+<td><code>sudo tail -f /var/log/nginx/error.log</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-下一步：域名-HTTPS"><a href="#6-下一步：域名-HTTPS" class="headerlink" title="6 下一步：域名 + HTTPS"></a>6 下一步：域名 + HTTPS</h2><ol>
+<li>阿里云购买域名 → <strong>域名控制台</strong> → <strong>解析</strong> → A 记录指向 <code>120.26.144.211</code>  </li>
+<li>备案 → 免费申请 SSL → 改 Nginx <code>server_name</code> → 启用 443 端口 → 全站 HTTPS</li>
+</ol>
+<p>至此，<strong>完全自主、无第三方平台</strong> 的 Hexo 部署流程结束。祝你顺利！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://www.wxblog.online">墓葬未亡人</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://www.wxblog.online/2025/08/28/hexo-deploy-to-aliyun-server/">https://www.wxblog.online/2025/08/28/hexo-deploy-to-aliyun-server/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://www.wxblog.online" target="_blank">在这个世界上总要留下些什么</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Hexo/">Hexo</a><a class="post-meta__tags" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a><a class="post-meta__tags" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">服务器部署</a><a class="post-meta__tags" href="/tags/%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/">静态博客</a><a class="post-meta__tags" href="/tags/Git/">Git</a><a class="post-meta__tags" href="/tags/Nginx/">Nginx</a></div><div class="post-share"><div class="social-share" data-image="/img/favicon.ico" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果觉得文章对您有帮助，可以请我加个鸡腿☕</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png" alt="微信打赏"/></a><div class="post-qr-code-desc">微信打赏</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝打赏"/></a><div class="post-qr-code-desc">支付宝打赏</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/10/25/happiness-and-loss/" title="人总在接近幸福时倍感幸福，在幸福进行时患得患失"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">人总在接近幸福时倍感幸福，在幸福进行时患得患失</div></div><div class="info-2"><div class="info-item-1">当《寻她芳踪》的终章咏叹在歌剧院穹顶之下如水银般流淌、盘旋，直至最终归于寂静，我依然被那股巨大的情感涡流裹挟，久久无法回到现实的坐席。那旋律，像一把钥匙，没有开启任何未来的门，却撬开了记忆的锈锁。刹那间，我仿佛不再是衣冠楚楚地端坐于此的成年人，而是变回了那个在夏日炽风中，嗅着塑胶跑道被阳光炙烤出独特气息的少年。 都说，人无法在当下真正知晓某一刻的价值，直到它被时间酿成一杯或甘或苦的回忆。而那句反复被验证的谶语，此刻也随着音乐的余波，在我心中激起回响”人总是在接近幸福时倍感幸福，在幸福进行时却又患得患失。” 是的，回忆是一场无声的放映。 那是一个怎样的夏日午后？天空是洗净的蓝，没有一丝云的遮拦，阳光便毫无顾忌地倾泻下来，将整个世界照得通明，甚至有些刺眼。高中的操场，说大不大，说小不小，却像一个浓缩的青春剧场。几个班级的体育课被排在同一时段，于是这片小小的天地里，便上演着泾渭分明而又彼此交织的剧目。 舞台的中央，永远属于那群不知疲倦的”疯子”。他们是光之子，是风的宠儿，在滚烫的跑道上疾驰而过，大口喘息着，任由汗水从额角滑落，在脸颊上冲刷出闪亮的沟壑，最终在空中划出一道道晶莹的弧线，献...</div></div></div></a><a class="pagination-related" href="/2025/08/27/hello-world/" title="你好，我是未亡人"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">你好，我是未亡人</div></div><div class="info-2"><div class="info-item-1">👋 Hello World! “这声简单的问候，在程序员的世界里，是旅程的起点，是代码第一次呼吸的证明。而在这里，在我的数字角落，它同样标志着一段新探索的开始。”  🎯 关于我我是一名技术爱好者和内容创作者，热衷于探索编程世界的无限可能。在这个数字化的时代，我相信每一行代码都承载着改变世界的力量。 🌟 我的理念 持续学习：保持学习的热情 开源分享：知识因分享而更有价值 简单优雅：追求代码的简洁与高效  📺 我的B站频道🎬 欢迎来到我的创作空间我在B站也有一个活跃的频道，在那里我分享更多技术教程、项目实战和生活分享。 🔗 频道信息 频道名称: humanfirework的技术空间 频道链接: https://space.bilibili.com/3494381157878384 内容方向:  🎥 学习过程：自我记录学习过程 🛠️ 项目实战：有趣的实验分享 💡 工具分享：提升效率的宝藏软件 📱 APP推荐：实用有趣的移动应用    📱 如何找到我 直接访问: 点击直达我的B站主页 搜索方式: 在B站搜索”墓葬未亡人”  🚀 我的项目（暂时没有）🏗️ 当前进行...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.ico" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">墓葬未亡人</div><div class="author-info-description">一个记录技术与生活的个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="author-buttons"><a id="card-info-btn" href="https://github.com/humanfirework" title="GitHub" target="_blank" rel="noopener"><i class="fab fa-github"></i><span>GitHub</span></a><a id="card-info-bilibili-btn" href="https://space.bilibili.com/3494381157878384" title="哔哩哔哩" target="_blank" rel="noopener"><i class="fab fa-bilibili"></i><span>哔哩哔哩</span></a></div><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/humanfirework" target="_blank" title="fab fa-github"><i class="GitHub" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/3494381157878384" target="_blank" title="fab fa-bilibili"><i class="哔哩哔哩" style="color: #00a1d6;"></i></a><a class="social-icon" href="/2223481830@qq.com" target="_blank" title="fa fa-envelope"><i class="邮箱" style="color: #ea4335;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B6%85%E8%AF%A6%E7%BB%86%E7%89%88%EF%BC%9A%E4%BB%8E-0-%E5%88%B0-1-%E6%8A%8A-Hexo-%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E5%89%8D%E6%8F%90"><span class="toc-number">1.1.</span> <span class="toc-text">0 前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E6%93%8D%E4%BD%9C%EF%BC%88%E5%85%A8%E7%A8%8B-root-%E8%BA%AB%E4%BB%BD%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">1 服务器端操作（全程 root 身份）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%AE%89%E8%A3%85%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 安装基础环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%88%9B%E5%BB%BA%E8%A3%B8%E4%BB%93%E5%BA%93%EF%BC%88%E5%8F%AA%E5%AD%98-Git-%E5%8E%86%E5%8F%B2%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 创建裸仓库（只存 Git 历史）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%88%9B%E5%BB%BA%E7%BD%91%E7%AB%99%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.3 创建网站目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E5%88%9B%E5%BB%BA-Git-Hook%EF%BC%88%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E8%84%9A%E6%9C%AC%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">1.4 创建 Git Hook（自动部署脚本）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AE-Nginx-%E6%8C%87%E5%90%91%E7%BD%91%E7%AB%99%E6%A0%B9%E7%9B%AE%E5%BD%95"><span class="toc-number">1.3.</span> <span class="toc-text">2 配置 Nginx 指向网站根目录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%A4%87%E4%BB%BD%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 备份默认配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BF%AE%E6%94%B9-Nginx-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 修改 Nginx 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E6%B5%8B%E8%AF%95%E5%B9%B6%E9%87%8D%E8%BD%BD"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 测试并重载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9C%AC%E5%9C%B0-Hexo-%E9%85%8D%E7%BD%AE%E4%B8%80%E9%94%AE%E6%8E%A8%E9%80%81"><span class="toc-number">1.4.</span> <span class="toc-text">3 本地 Hexo 配置一键推送</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%89%E8%A3%85-hexo-deployer-git"><span class="toc-number">1.4.1.</span> <span class="toc-text">3.1 安装 hexo-deployer-git</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-config-yml-%E5%B0%BE%E9%83%A8%E8%BF%BD%E5%8A%A0"><span class="toc-number">1.4.2.</span> <span class="toc-text">3.2 _config.yml 尾部追加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E9%A6%96%E6%AC%A1%E6%8E%A8%E9%80%81%E5%B9%B6%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">3.3 首次推送并测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E4%B8%80%E8%A7%88-%E8%A7%A3%E5%86%B3"><span class="toc-number">1.5.</span> <span class="toc-text">4 常见错误一览 &amp; 解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%80%E9%94%AE%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.6.</span> <span class="toc-text">5 一键速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%8B%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%9F%9F%E5%90%8D-HTTPS"><span class="toc-number">1.7.</span> <span class="toc-text">6 下一步：域名 + HTTPS</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/happiness-and-loss/" title="人总在接近幸福时倍感幸福，在幸福进行时患得患失">人总在接近幸福时倍感幸福，在幸福进行时患得患失</a><time datetime="2025-10-25T12:30:00.000Z" title="发表于 2025-10-25 20:30:00">2025-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/28/hexo-deploy-to-aliyun-server/" title="超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器">超详细版：从 0 到 1 把 Hexo 静态博客部署到阿里云服务器</a><time datetime="2025-08-28T06:30:00.000Z" title="发表于 2025-08-28 14:30:00">2025-08-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/27/hello-world/" title="你好，我是未亡人">你好，我是未亡人</a><time datetime="2025-08-27T12:30:00.000Z" title="发表于 2025-08-27 20:30:00">2025-08-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/apple-touch-icon.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 墓葬未亡人</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0-b1</a></span></div><!-- ICP备案信息--><div class="icp-info" style="margin-top: 10px; text-align: center; font-size: 12px; color: var(--light-grey);"><a href="https://beian.miit.gov.cn/" target="_blank" style="color: var(--light-grey); text-decoration: none;">赣ICP备2025071754号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="translateLink" type="button" title="简繁转换">繁</button><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'http://120.26.144.211:3000',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      comment: true,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/enhanced-animations.js"></script><script src="/js/door-animation.js"></script><script src="/js/loading-config.js"></script><script src="/js/custom.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

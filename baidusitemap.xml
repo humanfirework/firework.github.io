@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://humanfirework.github.io/firework.github.io/2025/01/09/hexo-deploy-to-aliyun-server/</loc>
-    <lastmod>2025-08-31</lastmod>
+    <loc>https://www.wxblog.online/2025/08/28/hexo-deploy-to-aliyun-server/</loc>
+    <lastmod>2025-10-25</lastmod>
   </url>
   <url>
-    <loc>https://humanfirework.github.io/firework.github.io/2025/08/27/hello-world/</loc>
+    <loc>https://www.wxblog.online/2025/10/25/happiness-and-loss/</loc>
+    <lastmod>2025-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://www.wxblog.online/2025/08/27/hello-world/</loc>
     <lastmod>2025-08-30</lastmod>
   </url>
 </urlset> 
